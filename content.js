@@ -1,5 +1,3 @@
-let observer;
-
 function generateChallengeDiv() {
   const button = document.createElement("button");
   button.innerHTML = "Challenge";
@@ -25,10 +23,7 @@ function injectInviteLinks() {
 }
 
 function callWhenDOMChanged() {
-  if (challengeDivExists()) {
-    console.log("Challenges already exist");
-    return;
-  }
+  if (challengeDivExists()) return;
 
   injectInviteLinks();
 }
@@ -37,10 +32,17 @@ function startObservation() {
   const sections = document.getElementsByClassName("list-container left-pane");
   if (sections.length < 1) return;
 
+  callWhenDOMChanged();
+
   const watchedSection = sections[0];
   const config = { attributes: true, childList: true, subtree: true };
-  if (!observer) observer = new MutationObserver(callWhenDOMChanged);
+  let observer = new MutationObserver(callWhenDOMChanged);
   observer.observe(watchedSection, config);
 }
+
+chrome.runtime.onMessage.addListener(function(request) {
+  if (request.action === "re-observe")
+    setTimeout(() => startObservation(), 1500);
+});
 
 startObservation();
