@@ -1,11 +1,12 @@
 {
   "manifest_version": 2,
   "name": "Compete",
-  "version": "1",
+  "version": "1.0",
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "matches": ["https://www.hackerrank.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
     }
   ],
   "background": {
@@ -13,5 +14,6 @@
   },
   "browser_action": {
     "default_title": "Compete"
-  }
+  },
+  "permissions": ["tabs"]
 }
